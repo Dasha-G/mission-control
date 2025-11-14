@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace t00
+namespace Travelling
 {
     internal static class Program
     {
