@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using Travelling;
+using Newtonsoft.Json;
 
 namespace Travelling.Controls
 {
@@ -138,6 +139,11 @@ namespace Travelling.Controls
                 MessageBox.Show("Traveler loaded successfully.",
                     "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 UpdateUI();
+            }
+            catch (JsonReaderException)
+            {
+                MessageBox.Show("Invalid .json file during loading.",
+                    "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {

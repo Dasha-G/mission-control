@@ -18,6 +18,10 @@ namespace Travelling.Controls
             btnLoadMap = new Button();
             lblStatus = new Label();
             lstCities = new ListBox();
+            txtCityInput = new TextBox();
+            btnAddCity = new Button();
+            btnRemoveCity = new Button();
+            AddRemoveLabel = new Label();
             SuspendLayout();
             // 
             // lblTitle
@@ -27,7 +31,7 @@ namespace Travelling.Controls
             lblTitle.ForeColor = Color.White;
             lblTitle.Location = new Point(306, 21);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(119, 25);
+            lblTitle.Size = new Size(150, 32);
             lblTitle.TabIndex = 0;
             lblTitle.Text = "Map Loader";
             lblTitle.Click += lblTitle_Click;
@@ -72,6 +76,7 @@ namespace Travelling.Controls
             lstCities.Size = new Size(300, 191);
             lstCities.TabIndex = 4;
             // 
+            // 
             // MapControl
             // 
             BackColor = Color.FromArgb(30, 40, 66);
@@ -88,5 +93,9 @@ namespace Travelling.Controls
             ResumeLayout(false);
             PerformLayout();
         }
+        private TextBox txtCityInput;
+        private Button btnAddCity;
+        private Button btnRemoveCity;
+        private Label AddRemoveLabel;
     }
 }

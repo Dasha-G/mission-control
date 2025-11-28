@@ -43,7 +43,7 @@ namespace Travelling.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error while loading map:\n" + ex.Message,
+                MessageBox.Show("Error while loading map: Map file not found or invalid format\n" + ex.Message,
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

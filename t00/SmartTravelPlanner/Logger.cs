@@ -12,7 +12,10 @@ namespace Travelling
         {
             foreach (T entry in entries)
             {
-                File.AppendAllText(FilePath, entry.ToString() + "\n");
+                if (entry != null)
+                {
+                    File.AppendAllText(FilePath, entry.ToString() + "\n");
+                }
             }
         }
     }

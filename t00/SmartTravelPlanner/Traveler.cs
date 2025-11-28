@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
-
+using System.IO;
+using System.Linq;
 
 namespace Travelling
 {
@@ -14,9 +15,9 @@ namespace Travelling
 
         private class TempTraveler
         {
-            public string name { get; set; }
-            public string currentLocation { get; set; }
-            public List<string> route { get; set; }
+            public string? name { get; set; }
+            public string? currentLocation { get; set; }
+            public List<string>? route { get; set; }
         }
 
         public Traveler(string name)
@@ -46,7 +47,7 @@ namespace Travelling
         }
 
 
-        public string GetLocation()
+        public string? GetLocation()
         {
             return currentLocation;
         }
@@ -125,7 +126,7 @@ namespace Travelling
             return cities.Remove(city);
         }
 
-        public string GetNextStop()
+        public string? GetNextStop()
         {
             if (cities.Count > 0)
             {
@@ -159,7 +160,18 @@ namespace Travelling
             return !(a == b);
         }
 
-
+        public override bool Equals(object? obj)
+        {
+            if (obj is Traveler other)
+            {
+                return this == other;
+            }
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(name, currentLocation);
+        }
         public object Clone()
         {
             Traveler copy = new Traveler(this.name);
@@ -192,45 +204,65 @@ namespace Travelling
         {
             string json = File.ReadAllText(filePath);
             var temp = JsonConvert.DeserializeObject<TempTraveler>(json);
-
-            Traveler traveler = new Traveler(temp.name);
-            traveler.SetLocation(temp.currentLocation);
-            foreach (var city in temp.route)
+            if (temp == null)
             {
-                traveler.AddCity(city);
+                throw new Exception("Error during deserialization");
             }
-
+            if (temp.name == null)
+            {
+                throw new Exception("Traveler name is missing in file");
+            }
+            Traveler traveler = new Traveler(temp.name);
+            traveler.SetLocation(temp.currentLocation ?? "");
+            if (temp.route != null)
+            {
+                foreach (var city in temp.route) {
+                    if (city != null)
+                    {
+                        traveler.AddCity(city);
+                    }
+                }
+            }
             return traveler;
         }
 
-        public void PlanRouteTo(string destination, CityGraph map)
+        public bool PlanRouteTo(string destination, CityGraph map)
         {
             string from = "";
-
             if (!string.IsNullOrEmpty(currentLocation))
             {
                 from = currentLocation;
             }
-            else
+            else if (cities.Count > 0)
             {
-                if (cities == null || cities.Count < 1)
-                {
-                    throw new Exception("No route!");
-                }
-                
                 from = cities[0];
             }
+            else
+            {
+                
+                return false;
+            }
+            if (!map.CityExists(from)) 
+            {
 
+                throw new ArgumentException($"The starting city '{from}' is not recognized in the map. Please enter a valid Current City.");
+            }
             List<string> shortestPath = map.FindShortestPath(from, destination);
-
+            if (shortestPath.Count == 0)
+            {
+                return false;
+            }
             cities.Clear();
             for (int i = 0; i < shortestPath.Count; i++)
             {
                 cities.Add(shortestPath[i]);
             }
-            
+            return true;
         }
-
+        public void SetCities(List<string> newRoute)
+        {
+            cities = newRoute;
+        }
     }
     
 }

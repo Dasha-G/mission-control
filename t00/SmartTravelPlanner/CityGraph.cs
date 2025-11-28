@@ -6,6 +6,34 @@ namespace Travelling
     {
         private Dictionary<string, List<(string, int)>> adjacencyList = new Dictionary<string, List<(string, int)>>();
 
+        public bool CityExists(string city)
+        {
+            return adjacencyList.ContainsKey(city);
+        }
+        public bool AddCity(string city)
+        {
+            if (string.IsNullOrWhiteSpace(city) || CityExists(city))
+            {
+                return false;
+            }
+            adjacencyList[city] = new List<(string, int)>();
+            return true;
+        }
+        public bool RemoveCity(string city)
+        {
+            if (!CityExists(city))
+            {
+                return false;
+            }
+            foreach (var key in new List<string>(adjacencyList.Keys))
+            {
+                if (adjacencyList.ContainsKey(key))
+                {
+                    adjacencyList[key].RemoveAll(edge => edge.Item1 == city);
+                }
+            }
+            return adjacencyList.Remove(city);
+        }
         public override string ToString()
         {
             string result = "";
